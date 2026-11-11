@@ -8,16 +8,82 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "PBP C";
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Proyek", Icons.folder, Colors.lightBlue),
-    ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.pink),
-    ItemHomepage("Logout", Icons.logout, Colors.blueAccent),
+    ItemHomepage(
+      "Lihat Proyek",
+      "Eksplorasi karya & studi kasus",
+      Icons.folder,
+      Colors.blue.shade700,
+    ),
+    ItemHomepage(
+      "Tambah Proyek",
+      "Unggah item portofolio baru",
+      Icons.add_circle,
+      Colors.green.shade600,
+    ),
+    ItemHomepage(
+      "Lihat Skills",
+      "Daftar keahlian & teknologi",
+      Icons.code,
+      Colors.deepPurple.shade600,
+    ),
+    ItemHomepage(
+      "Logout",
+      "Keluar dari sesi aplikasi",
+      Icons.logout,
+      Colors.red.shade600,
+    ),
   ];
 
-    @override
+  void _showProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.account_circle, color: Colors.indigo),
+              SizedBox(width: 8),
+              Text('Profil Pemilik Portofolio'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nama: $nama',
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 4),
+              Text('NPM: $npm'),
+              const SizedBox(height: 4),
+              Text('Kelas: $kelas'),
+              const Divider(height: 20),
+              const Text(
+                'Aplikasi MyPortfolio Mobile untuk menampilkan daftar proyek dan keahlian.',
+                style: TextStyle(fontSize: 13, color: Colors.black87),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Scaffold menyediakan struktur visual dasar halaman (AppBar, Body, SnackBar).
     return Scaffold(
-      // AppBar menampilkan bar bagian atas halaman aplikasi.
+      // AppBar menampilkan bar bagian atas halaman aplikasi beserta tombol info profil.
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
@@ -27,9 +93,16 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, color: Colors.white),
+            tooltip: 'Info Profil',
+            onPressed: () => _showProfileDialog(context),
+          ),
+        ],
       ),
-      // Body halaman utama dengan padding di sekelilingnya.
-      body: Padding(
+      // Body halaman utama dibungkus SingleChildScrollView agar aman dari overflow.
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,14 +134,15 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
 
-                  // GridView menampilkan kartu tombol dalam tata letak kisi 3 kolom.
+                  // GridView menampilkan 4 kartu tombol dalam tata letak kisi 2x2.
                   GridView.count(
-                    primary: true,
+                    primary: false,
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    // shrinkWrap agar ukuran kisi menyesuaikan tinggi konten anak.
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.4,
                     shrinkWrap: true,
                     children: items.map((ItemHomepage item) {
                       return ItemCard(item);
@@ -83,16 +157,6 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-
-// This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
 
 class InfoCard extends StatelessWidget {
   // Kartu informasi yang menampilkan judul (title) dan isi (content).
@@ -118,7 +182,10 @@ class InfoCard extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
-            Text(content),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(content),
+            ),
           ],
         ),
       ),
@@ -128,9 +195,11 @@ class InfoCard extends StatelessWidget {
 
 class ItemHomepage {
   final String name;
+  final String subtitle;
   final IconData icon;
   final Color color;
-  ItemHomepage(this.name, this.icon, this.color);
+
+  ItemHomepage(this.name, this.subtitle, this.icon, this.color);
 }
 
 class ItemCard extends StatelessWidget {
@@ -141,21 +210,25 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      // Menggunakan warna sekunder dari skema tema aplikasi.
+      // Menggunakan warna unik dari masing-masing item dengan bayangan halus.
       color: item.color,
+      elevation: 3.0,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         // Aksi ketika kartu ditekan oleh pengguna.
         onTap: () {
-          // Menampilkan SnackBar dengan pesan interaktif.
+          // Menampilkan SnackBar dengan pesan interaktif sesuai spesifikasi tugas.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              SnackBar(
+                content: Text("Kamu telah menekan tombol ${item.name}!"),
+              ),
             );
         },
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -165,11 +238,26 @@ class ItemCard extends StatelessWidget {
                   color: Colors.white,
                   size: 30.0,
                 ),
-                const Padding(padding: EdgeInsets.all(3)),
+                const SizedBox(height: 6),
                 Text(
                   item.name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.0,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  item.subtitle,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11.0,
+                  ),
                 ),
               ],
             ),
