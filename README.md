@@ -1,6 +1,10 @@
-NAMA: Rania Aqila
-NPM: 2506623282
-KELAS: PBP C
+Nama : Rania Aqila
+
+NPM : 2506623282
+
+Kelas : PBP C
+
+-------------------------------------
 
 ### Tugas 7
 
