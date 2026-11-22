@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
 
@@ -13,26 +14,30 @@ class MyHomePage extends StatelessWidget {
     ItemHomepage(
       "Lihat Proyek",
       "Eksplorasi karya & studi kasus",
-      Icons.folder,
-      Colors.blue.shade700,
+      Icons.folder_outlined,
+      PortfolioTheme.accentDark,
+      PortfolioTheme.paper,
     ),
     ItemHomepage(
       "Tambah Proyek",
       "Unggah item portofolio baru",
-      Icons.add_circle,
-      Colors.green.shade600,
+      Icons.add_circle_outline,
+      PortfolioTheme.mint,
+      PortfolioTheme.ink,
     ),
     ItemHomepage(
-      "Lihat Skills",
-      "Daftar keahlian & teknologi",
+      "Tambah Skill",
+      "Catat keahlian & teknologi",
       Icons.code,
-      Colors.deepPurple.shade600,
+      PortfolioTheme.accent,
+      PortfolioTheme.ink,
     ),
     ItemHomepage(
       "Logout",
       "Keluar dari sesi aplikasi",
       Icons.logout,
-      Colors.red.shade600,
+      PortfolioTheme.danger,
+      PortfolioTheme.paper,
     ),
   ];
 
@@ -41,14 +46,19 @@ class MyHomePage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.account_circle, color: Colors.indigo),
-              SizedBox(width: 8),
-              Text('Profil Pemilik Portofolio'),
+              const Icon(Icons.account_circle, color: PortfolioTheme.accentDark),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Profil Pemilik Portofolio',
+                  style: PortfolioTheme.displayStyle(
+                    fontSize: 17,
+                    color: PortfolioTheme.ink,
+                  ),
+                ),
+              ),
             ],
           ),
           content: Column(
@@ -57,16 +67,22 @@ class MyHomePage extends StatelessWidget {
             children: [
               Text(
                 'Nama: $nama',
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: PortfolioTheme.monoStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 4),
-              Text('NPM: $npm'),
+              Text('NPM: $npm', style: PortfolioTheme.monoStyle(fontSize: 13.5)),
               const SizedBox(height: 4),
-              Text('Kelas: $kelas'),
-              const Divider(height: 20),
-              const Text(
+              Text('Kelas: $kelas', style: PortfolioTheme.monoStyle(fontSize: 13.5)),
+              const Divider(height: 20, color: PortfolioTheme.line),
+              Text(
                 'Aplikasi MyPortfolio Mobile untuk menampilkan daftar proyek dan keahlian.',
-                style: TextStyle(fontSize: 13, color: Colors.black87),
+                style: PortfolioTheme.monoStyle(
+                  fontSize: 12.5,
+                  color: PortfolioTheme.textMuted,
+                ),
               ),
             ],
           ),
@@ -83,35 +99,24 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold menyediakan struktur visual dasar halaman (AppBar, Body, SnackBar).
     return Scaffold(
-      // AppBar menampilkan bar bagian atas halaman aplikasi beserta tombol info profil.
       appBar: AppBar(
-        title: const Text(
-          'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text('MyPortfolio'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline, color: Colors.white),
+            icon: const Icon(Icons.info_outline),
             tooltip: 'Info Profil',
             onPressed: () => _showProfileDialog(context),
           ),
         ],
       ),
       drawer: const LeftDrawer(),
-      // Body halaman utama dibungkus SingleChildScrollView agar aman dari overflow.
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Baris horizontal untuk menampilkan 3 InfoCard secara sejajar.
+            // Baris horizontal 3 InfoCard bergaya kartu portofolio
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -121,32 +126,77 @@ class MyHomePage extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
 
-            // Bagian tengah: pesan sambutan dan kisi tombol menu portofolio.
+            // Bagian tengah: pesan sambutan & kisi tombol menu portofolio
             Center(
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      'Selamat datang di MyPortfolio Mobile!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'PORTFOLIO DASHBOARD',
+                          style: PortfolioTheme.monoStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w700,
+                            color: PortfolioTheme.accentDark,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              'Selamat datang di ',
+                              style: PortfolioTheme.displayStyle(
+                                fontSize: 18.0,
+                                color: PortfolioTheme.ink,
+                              ),
+                            ),
+                            Transform.rotate(
+                              angle: -0.03,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: PortfolioTheme.accent,
+                                  borderRadius: BorderRadius.circular(
+                                    PortfolioTheme.radius,
+                                  ),
+                                ),
+                                child: Text(
+                                  'MyPortfolio!',
+                                  style: PortfolioTheme.displayStyle(
+                                    fontSize: 18.0,
+                                    color: PortfolioTheme.ink,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
 
-                  // GridView menampilkan 4 kartu tombol dalam tata letak kisi 2x2.
+                  // GridView 2x2 kartu aksi
                   GridView.count(
                     primary: false,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 16,
+                    ),
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                     crossAxisCount: 2,
-                    childAspectRatio: 1.4,
+                    childAspectRatio: 1.38,
                     shrinkWrap: true,
                     children: items.map((ItemHomepage item) {
                       return ItemCard(item);
@@ -163,7 +213,6 @@ class MyHomePage extends StatelessWidget {
 }
 
 class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan judul (title) dan isi (content).
   final String title;
   final String content;
 
@@ -171,27 +220,38 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // Memberikan efek bayangan kartu elevasi 2 unit.
-      elevation: 2.0,
-      child: Container(
-        // Menyesuaikan lebar kartu dengan proporsi layar (dibagi 3.5).
-        width: MediaQuery.of(context).size.width / 3.5,
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun teks title dan content secara vertikal.
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+    return Container(
+      width: MediaQuery.of(context).size.width / 3.5,
+      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10.0),
+      decoration: BoxDecoration(
+        color: PortfolioTheme.card,
+        border: Border.all(color: PortfolioTheme.accentDark, width: 2.0),
+        borderRadius: BorderRadius.circular(PortfolioTheme.radius),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title.toUpperCase(),
+            style: PortfolioTheme.monoStyle(
+              fontSize: 11.0,
+              fontWeight: FontWeight.w700,
+              color: PortfolioTheme.textMuted,
+              letterSpacing: 0.8,
             ),
-            const SizedBox(height: 8.0),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(content),
+          ),
+          const SizedBox(height: 6.0),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              content,
+              style: PortfolioTheme.displayStyle(
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+                color: PortfolioTheme.ink,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -202,6 +262,13 @@ class ItemHomepage {
   final String subtitle;
   final IconData icon;
   final Color color;
+  final Color foregroundColor;
 
-  ItemHomepage(this.name, this.subtitle, this.icon, this.color);
+  ItemHomepage(
+    this.name,
+    this.subtitle,
+    this.icon,
+    this.color,
+    this.foregroundColor,
+  );
 }
