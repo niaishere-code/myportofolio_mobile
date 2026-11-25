@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:myportofolio_mobile/providers/auth_state.dart';
+import 'package:myportofolio_mobile/screens/login.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/project_list.dart';
 import 'package:myportofolio_mobile/screens/skill_form.dart';
 import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
+import 'package:provider/provider.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthState>();
+
     return Drawer(
       backgroundColor: PortfolioTheme.paper,
       shape: const RoundedRectangleBorder(
@@ -39,9 +45,11 @@ class LeftDrawer extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Explore personal projects and skills!',
+                  authState.isLoggedIn
+                      ? 'Logged in as @${authState.username}'
+                      : 'Explore personal projects and skills!',
                   style: PortfolioTheme.monoStyle(
-                    fontSize: 13.5,
+                    fontSize: 13.0,
                     color: PortfolioTheme.accentSoft,
                   ),
                 ),
@@ -73,6 +81,29 @@ class LeftDrawer extends StatelessWidget {
           const Divider(height: 1, color: PortfolioTheme.line),
           ListTile(
             leading: const Icon(
+              Icons.folder_outlined,
+              color: PortfolioTheme.accentDark,
+            ),
+            title: Text(
+              'Projects',
+              style: PortfolioTheme.displayStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: PortfolioTheme.ink,
+              ),
+            ),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProjectListScreen(),
+                ),
+              );
+            },
+          ),
+          const Divider(height: 1, color: PortfolioTheme.line),
+          ListTile(
+            leading: const Icon(
               Icons.add_circle_outline,
               color: PortfolioTheme.accentDark,
             ),
@@ -84,7 +115,10 @@ class LeftDrawer extends StatelessWidget {
                 color: PortfolioTheme.ink,
               ),
             ),
-            onTap: () {
+            onTap: () async {
+              final allowed = await ensureLoggedIn(context);
+              if (!allowed || !context.mounted) return;
+
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -116,6 +150,62 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(height: 1, color: PortfolioTheme.line),
+          if (authState.isLoggedIn)
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: PortfolioTheme.danger,
+              ),
+              title: Text(
+                'Logout',
+                style: PortfolioTheme.displayStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: PortfolioTheme.danger,
+                ),
+              ),
+              onTap: () async {
+                await context.read<AuthState>().logout();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text('Logout berhasil!'),
+                    ),
+                  );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ),
+                );
+              },
+            )
+          else
+            ListTile(
+              leading: const Icon(
+                Icons.login,
+                color: PortfolioTheme.accentDark,
+              ),
+              title: Text(
+                'Login',
+                style: PortfolioTheme.displayStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: PortfolioTheme.accentDark,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+            ),
           const Divider(height: 1, color: PortfolioTheme.line),
         ],
       ),

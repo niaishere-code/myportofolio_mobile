@@ -116,7 +116,6 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Baris horizontal 3 InfoCard bergaya kartu portofolio
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -125,10 +124,7 @@ class MyHomePage extends StatelessWidget {
                 InfoCard(title: 'Class', content: kelas),
               ],
             ),
-
             const SizedBox(height: 20.0),
-
-            // Bagian tengah: pesan sambutan & kisi tombol menu portofolio
             Center(
               child: Column(
                 children: [
@@ -184,8 +180,6 @@ class MyHomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  // GridView 2x2 kartu aksi
                   GridView.count(
                     primary: false,
                     physics: const NeverScrollableScrollPhysics(),

@@ -219,7 +219,7 @@ class _SkillFormPageState extends State<SkillFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // === Opsi 1: Live Preview Card ===
+              // === Live Preview Card ===
               _buildLivePreviewCard(),
 
               // === Nama Skill ===
@@ -281,7 +281,7 @@ class _SkillFormPageState extends State<SkillFormPage> {
                 ),
               ),
 
-              // === Opsi 2: Pemilih Tingkat Kemahiran Interaktif (.filter-chip) ===
+              // === Pemilih Tingkat Kemahiran Interaktif ===
               Padding(
                 padding: const EdgeInsets.only(bottom: 14.0),
                 child: InputDecorator(
